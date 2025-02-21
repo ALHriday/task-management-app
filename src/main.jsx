@@ -15,6 +15,7 @@ import Login from './Auth/Login.jsx';
 import Todo from './components/Todo.jsx';
 import InProgress from './components/InProgress.jsx';
 import Done from './components/Done.jsx';
+import CreateTodo from './components/CreateTodo.jsx';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
           {
             path: '/todo-app/done',
             element: <Done></Done>
+          },
+          {
+            path: '/todo-app/create-todo',
+            element: <CreateTodo></CreateTodo>
           }
         ]
       },
