@@ -12,6 +12,9 @@ import AuthProvider from './AuthProvider/AuthProvider.jsx';
 import TodoApp from './components/TodoApp/TodoApp.jsx';
 import PrivateRoute from './PrivateRoute/PrivateRoute.jsx';
 import Login from './Auth/Login.jsx';
+import Todo from './components/Todo.jsx';
+import InProgress from './components/InProgress.jsx';
+import Done from './components/Done.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,8 +27,23 @@ const router = createBrowserRouter([
       },
       {
         path: '/todo-app',
-        element: <PrivateRoute><TodoApp/></PrivateRoute>
-      },{
+        element: <PrivateRoute><TodoApp/></PrivateRoute>,
+        children: [
+          {
+            path: '/todo-app',
+            element: <Todo></Todo>
+          },
+          {
+            path: '/todo-app/inprogress',
+            element: <InProgress></InProgress>
+          },
+          {
+            path: '/todo-app/done',
+            element: <Done></Done>
+          }
+        ]
+      },
+      {
         path: '/login',
         element: <Login></Login>
       }
