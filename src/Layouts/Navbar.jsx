@@ -20,7 +20,9 @@ const Navbar = () => {
                             <li><Link to='/todo-app'>Todo-App</Link></li>
                         </ul>
                     </div>
-                    <a className="btn btn-ghost text-xl">daisyUI</a>
+                    <div className="text-xl w-10 h-10">
+                        <img className="w-full h-full" src="https://img.icons8.com/?size=100&id=5CtiUq0Pvtnd&format=png&color=000000" alt="" />
+                    </div>
                 </div>
                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1">
