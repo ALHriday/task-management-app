@@ -7,6 +7,12 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
+
+
 import Home from './Layouts/Home.jsx';
 import AuthProvider from './AuthProvider/AuthProvider.jsx';
 import TodoApp from './components/TodoApp/TodoApp.jsx';
@@ -28,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/todo-app',
-        element: <PrivateRoute><TodoApp/></PrivateRoute>,
+        element: <PrivateRoute><TodoApp /></PrivateRoute>,
         children: [
           {
             path: '/todo-app',
@@ -58,9 +64,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router}>
-      </RouterProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <RouterProvider router={router}>
+        </RouterProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

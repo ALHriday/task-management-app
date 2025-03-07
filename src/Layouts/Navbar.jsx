@@ -37,7 +37,6 @@ const Navbar = () => {
                     </> : <>
                         <Link to='/login' className="btn bg-blue-500">LogIn</Link>
                     </>}
-
                 </div>
             </div>
         </div>
