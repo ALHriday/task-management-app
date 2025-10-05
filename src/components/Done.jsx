@@ -1,25 +1,16 @@
-import useAxiosPublic from "../Hooks/useAxiosPublic";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import useHandleUpdateCategory from "../Hooks/useHandleUpdateCategory";
 import { useContext } from "react";
 import { AuthContext } from "../AuthProvider/AuthProvider";
+import { ButtonDelete, ButtonEdit } from "./Buttons/Buttons";
+import { Link } from "react-router-dom";
+
 
 const Done = () => {
-    const { todoData, fetchTodoData } = useContext(AuthContext);
+    const { todoData } = useContext(AuthContext);
     const { handleUpdateCategory } = useHandleUpdateCategory();
-    const axiosPublic = useAxiosPublic();
-
-    const handleDeleteTodo = (id) => {
-        axiosPublic.delete(`/todo/${id}`).then(res => {
-            if (res.data.deletedCount > 0) {
-                fetchTodoData();
-                return;
-            }
-        })
-    }
 
     const doneCategory = todoData && [...todoData].filter(data => data.category === 'done');
-
 
     return (
 
@@ -34,8 +25,10 @@ const Done = () => {
                         <p className="text-sm ">{data.currentTime}</p>
                     </div>
                     <div className="flex gap-1 absolute top-1 right-1">
-                        <button className="btn btn-sm bg-black">Edit</button>
-                        <button onClick={() => handleDeleteTodo(data._id)} className="btn btn-sm bg-red-500">x</button>
+                        <Link to={`/todo-app/update-todo/${data._id}`}>
+                            <ButtonEdit id={data._id} />
+                        </Link>
+                        <ButtonDelete id={data._id} />
                     </div>
                 </div>
             )}

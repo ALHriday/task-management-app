@@ -7,15 +7,6 @@ const Login = () => {
     const { signInWithGoogle, setUser } = useContext(AuthContext);
     const axiosPublic = useAxiosPublic();
 
-    // console.log(user);
-    // const userName = user?.displayName;
-    // const userEmail = user?.email;
-    // const userId = user?.uid;
-
-    // const userInfo = { userName, userEmail, userId };
-
-    // console.log(userInfo);
-    
     const navigate = useNavigate();
 
     const handleGoogleSignIn = () => {
@@ -27,7 +18,7 @@ const Login = () => {
             const userName = user.displayName;
             const userEmail = user.email;
             const userId = user.uid;
-        
+
             const userInfo = { userName, userEmail, userId };
 
             axiosPublic.post('/users', userInfo).then(res => res

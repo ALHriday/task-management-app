@@ -1,44 +1,58 @@
 import { createContext, useEffect, useState } from "react";
-// eslint-disable-next-line react-refresh/only-export-components
-export const AuthContext = createContext(null);
 import { GoogleAuthProvider, onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import auth from "../Auth/firebase.config";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
-// import useTaskData from "../Hooks/useTaskData";
-// import { io } from "socket.io-client";
-// const socket = io("http://localhost:2100");
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext(null);
+
+import { io } from "socket.io-client";
+const socket = io("https://todo-app-server-rosy.vercel.app");
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [active, setActve] = useState([]);
+    const [active, setActive] = useState([]);
     const [createBtn, setCreateBtn] = useState(false);
     const [updateTaskBtn, setUpdateTaskBtn] = useState(false);
     const [todoData, setTodoData] = useState([]);
     const [task, setTask] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [data, setData] = useState([]);
 
-    const fetchTodoData = async () => {
-        const res = await axiosPublic(`/todoList/${user?.email}`);
-        setTodoData(res.data);
-      };
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
-    const axiosPublic = useAxiosPublic(); 
+    const axiosPublic = useAxiosPublic();
 
-    
-    
-    // useEffect(() => {
-    //     // Listen for incoming messages
-    //     socket.on("receive_message", (data) => {
-    //         console.log(data);
-            
-    //       setTodoData((prev) => [...prev, data]);
-    //     });
-    
-    //     return () => {
-    //       socket.off("receive_message"); // Clean up listener
-    //     };
-    //   }, []);
+
+    useEffect(() => {
+        const fetchTodoData = async () => {
+            const res = await axiosPublic.get(`/todoList/${user?.email}`);
+            setTodoData(res.data);
+        };
+        fetchTodoData();
+        // Listen for incoming messages
+        socket.on("refresh_tasks", fetchTodoData);
+        return () => {
+            socket.off("refresh_tasks"); // Clean up listener
+        };
+    }, [axiosPublic, user?.email]);
+
+
+    const handleDeleteTodo = (id) => {
+        axiosPublic.delete(`/todo/${id}`).then(res => {
+            if (res.data.deletedCount > 0) {
+                socket.emit('task_updated');
+            }
+        })
+    }
+
+    const handleUpdateTodo = () => {
+        setIsUpdate(true);
+    }
 
 
     const signInWithGoogle = () => {
@@ -61,17 +75,10 @@ const AuthProvider = ({ children }) => {
         return () => unSubscribe();
     }, [])
 
-    useEffect(() => {
-        axiosPublic.get(`/todoList/${user?.email}`).then(res => {
-            setTodoData(res.data);
-        })
-        setLoading(false);
-    }, [axiosPublic, user])
-
 
     const values = {
         active,
-        setActve,
+        setActive,
         loading,
         user,
         setUser,
@@ -81,12 +88,21 @@ const AuthProvider = ({ children }) => {
         setCreateBtn,
         todoData,
         setTodoData,
-        fetchTodoData,
-        updateTaskBtn, 
+        updateTaskBtn,
         setUpdateTaskBtn,
-        task, 
-        setTask
-        // handleUpdateCategory
+        task,
+        setTask,
+        socket,
+        isModalOpen,
+        openModal,
+        closeModal,
+        setIsModalOpen,
+        isUpdate,
+        setIsUpdate,
+        data,
+        setData,
+        handleDeleteTodo,
+        handleUpdateTodo,
     }
 
     return (

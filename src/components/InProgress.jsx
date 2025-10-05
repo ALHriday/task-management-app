@@ -1,23 +1,14 @@
-import useAxiosPublic from "../Hooks/useAxiosPublic";
+
 import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from "react-icons/fa";
 import useHandleUpdateCategory from "../Hooks/useHandleUpdateCategory";
 import { AuthContext } from "../AuthProvider/AuthProvider";
 import { useContext } from "react";
+import { ButtonDelete, ButtonEdit } from "./Buttons/Buttons";
+import { Link } from "react-router-dom";
 
 const InProgress = () => {
-    const {handleUpdateCategory, fetchTodoData} = useHandleUpdateCategory();
-    const {todoData} = useContext(AuthContext);
-    const axiosPublic = useAxiosPublic();
-
-    const handleDeleteTodo = (id) => {
-        axiosPublic.delete(`/todo/${id}`).then(res => {
-            if (res.data.deletedCount > 0) {
-                fetchTodoData();
-                return;
-            }
-        }
-        )
-    }
+    const { handleUpdateCategory } = useHandleUpdateCategory();
+    const { todoData } = useContext(AuthContext);
 
     const inProgressCategory = todoData && [...todoData].filter(data => data.category === 'inprogress');
 
@@ -38,8 +29,10 @@ const InProgress = () => {
                         <p className="text-sm ">{data.currentTime}</p>
                     </div>
                     <div className="flex gap-1 absolute top-1 right-1">
-                        <button className="btn btn-sm bg-black">Edit</button>
-                        <button onClick={() => handleDeleteTodo(data._id)} className="btn btn-sm bg-red-500">x</button>
+                        <Link to={`/todo-app/update-todo/${data._id}`}>
+                            <ButtonEdit id={data._id} />
+                        </Link>
+                        <ButtonDelete id={data._id} />
                     </div>
 
                 </div>
