@@ -11,7 +11,6 @@ const useHandleUpdateCategory = () => {
         axiosPublic.put(`/todo/${id}`, data).then(res => {
             if (res.data.modifiedCount > 0) {
                 socket.emit('task_updated');
-                return;
             }
         })
     }

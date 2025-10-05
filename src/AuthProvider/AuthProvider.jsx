@@ -7,20 +7,15 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 export const AuthContext = createContext(null);
 
 import { io } from "socket.io-client";
-const socket = io("https://todo-app-server-rosy.vercel.app");
+const socket = io("http://localhost:2100");
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [active, setActive] = useState([]);
-    const [createBtn, setCreateBtn] = useState(false);
-    const [updateTaskBtn, setUpdateTaskBtn] = useState(false);
     const [todoData, setTodoData] = useState([]);
-    const [task, setTask] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isUpdate, setIsUpdate] = useState(false);
-    const [data, setData] = useState([]);
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -77,21 +72,13 @@ const AuthProvider = ({ children }) => {
 
 
     const values = {
-        active,
-        setActive,
         loading,
         user,
         setUser,
         signInWithGoogle,
         handleLogOut,
-        createBtn,
-        setCreateBtn,
         todoData,
         setTodoData,
-        updateTaskBtn,
-        setUpdateTaskBtn,
-        task,
-        setTask,
         socket,
         isModalOpen,
         openModal,
@@ -99,8 +86,6 @@ const AuthProvider = ({ children }) => {
         setIsModalOpen,
         isUpdate,
         setIsUpdate,
-        data,
-        setData,
         handleDeleteTodo,
         handleUpdateTodo,
     }
