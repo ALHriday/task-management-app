@@ -56,7 +56,7 @@ const router = createBrowserRouter([
           {
             path: '/todo-app/update-todo/:_id',
             element: <UpdateTask />,
-            loader: ({ params }) => axios.get(`http://localhost:2100/todo/${params._id}`)
+            loader: ({ params }) => axios.get(`https://todo-app-server-rosy.vercel.app/todo/${params._id}`)
           },
         ]
       },

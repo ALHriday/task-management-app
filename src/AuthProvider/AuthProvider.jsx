@@ -7,7 +7,9 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 export const AuthContext = createContext(null);
 
 import { io } from "socket.io-client";
-const socket = io("http://localhost:2100");
+const socket = io("https://todo-app-server-rosy.vercel.app", {
+    transports: ["websocket"],
+});
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
@@ -24,15 +26,24 @@ const AuthProvider = ({ children }) => {
 
 
     useEffect(() => {
+        if (!user?.email) return;
+
         const fetchTodoData = async () => {
-            const res = await axiosPublic.get(`/todoList/${user?.email}`);
-            setTodoData(res.data);
+            try {
+                const res = await axiosPublic.get(`/todoList/${user.email}`);
+                setTodoData(res.data);
+            } catch (err) {
+                console.error("Failed to fetch todo:", err);
+            }
         };
+
         fetchTodoData();
-        // Listen for incoming messages
-        socket.on("refresh_tasks", fetchTodoData);
+
+        const handleRefresh = () => fetchTodoData();
+
+        socket.on("refresh_tasks", handleRefresh);
         return () => {
-            socket.off("refresh_tasks"); // Clean up listener
+            socket.off("refresh_tasks", handleRefresh); // Clean up listener
         };
     }, [axiosPublic, user?.email]);
 
