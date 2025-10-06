@@ -7,9 +7,9 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 export const AuthContext = createContext(null);
 
 import { io } from "socket.io-client";
-const socket = io("https://todo-app-server-rosy.vercel.app", {
-    transports: ["websocket"],
-});
+const socket = io("https://task-management-app-server-asrd.onrender.com", { transports: ["websocket"] });
+
+// {transports: ["websocket"],}
 
 // eslint-disable-next-line react/prop-types
 const AuthProvider = ({ children }) => {
