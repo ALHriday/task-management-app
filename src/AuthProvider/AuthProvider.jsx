@@ -7,6 +7,7 @@ import useAxiosPublic from "../Hooks/useAxiosPublic";
 export const AuthContext = createContext(null);
 
 import { io } from "socket.io-client";
+import { useCallback } from "react";
 const socket = io("https://task-management-app-server-asrd.onrender.com", { transports: ["websocket"] });
 
 // {transports: ["websocket"],}
@@ -24,28 +25,25 @@ const AuthProvider = ({ children }) => {
 
     const axiosPublic = useAxiosPublic();
 
+    const fetchTodoData = useCallback(async () => {
+        if (!user?.email) return;
+        try {
+            const res = await axiosPublic.get(`/todoList/${user.email}`);
+            setTodoData(res.data);
+        } catch (err) {
+            console.error("Failed to fetch todo:", err);
+        }
+    }, [axiosPublic, user.email])
+
 
     useEffect(() => {
-        if (!user?.email) return;
-
-        const fetchTodoData = async () => {
-            try {
-                const res = await axiosPublic.get(`/todoList/${user.email}`);
-                setTodoData(res.data);
-            } catch (err) {
-                console.error("Failed to fetch todo:", err);
-            }
-        };
-
         fetchTodoData();
 
-        const handleRefresh = () => fetchTodoData();
-
-        socket.on("refresh_tasks", handleRefresh);
+        socket.on("refresh_tasks", fetchTodoData);
         return () => {
-            socket.off("refresh_tasks", handleRefresh); // Clean up listener
+            socket.off("refresh_tasks", fetchTodoData); // Clean up listener
         };
-    }, [axiosPublic, user?.email]);
+    }, [fetchTodoData]);
 
 
     const handleDeleteTodo = (id) => {
